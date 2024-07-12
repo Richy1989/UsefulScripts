@@ -35,6 +35,7 @@ start_containers_with_delay() {
   done
 }
 
+# Send a notification to unraid
 unraid_notify() {
     local message="$1"
     local severity="$2"
