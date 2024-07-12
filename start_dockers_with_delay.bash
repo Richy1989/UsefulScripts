@@ -7,13 +7,16 @@ containers=(
   "container3:0"
 )
 
+#Enable of disable unraid notification
+enable_unraid_notification=true
+
 # Function to start Docker containers with their respective delays
 start_containers_with_delay() {
   for entry in "${containers[@]}"; 
   do
     IFS=':' read -r container delay <<< "$entry"
     echo "Starting $container..."
-    unraid_notify "$Starting $container..." "normal"
+    unraid_notify "Starting $container..." "normal"
 	
     # Start the container and capture the output
     output=$(docker start "$container")
@@ -35,13 +38,14 @@ start_containers_with_delay() {
   done
 }
 
-# Send a notification to unraid
 unraid_notify() {
     local message="$1"
     local severity="$2"
 	
-    # Call the Unraid notification script
-    /usr/local/emhttp/webGui/scripts/notify -s "Start Dockers" -d "$message" -i "$severity"
+	if [ "$enable_unraid_notification" = true ] ; then
+		# Call the Unraid notification script
+		/usr/local/emhttp/webGui/scripts/notify -s "Autostart Dockers" -d "$message" -i "$severity"
+	fi
 }
 
 # Start the containers with their respective delays
